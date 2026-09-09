@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayaansh Shah — Software & AI Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --surface:#ffffff;
+    --surface-soft:#f8faff;
+    --ink:#17233f;
+    --ink-2:#314363;
+    --muted:#71809a;
+    --line:#e7edf6;
+    --blue:#39FF88;
+    --purple:#20D96B;
+    --cyan:#39FFB0;
+    --pink:#ff6eae;
+    --navy:#07140D;
+    --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:#fff;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+  }
+  a{color:inherit}
+  header,main,footer{position:relative;z-index:2}
+  .wrap{width:min(1100px,calc(100% - 40px));margin:auto}
+  .progress{position:fixed;top:0;left:0;width:0;height:3px;z-index:100;background:linear-gradient(90deg,var(--purple),var(--blue),var(--cyan),var(--pink))}
+
+  /* subtle neon atmosphere — light, not glossy */
+  .glow-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.10}
+  .blob.b1{background:#7EE787;opacity:.10}
+  .blob.b2{background:#62E6A7;opacity:.09}
+  .blob.b3{background:#B7F7C1;opacity:.10}
+
+  nav{
+    height:72px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid rgba(231,237,246,.75)
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:var(--ink)}
+  .logo-code{font-family:'JetBrains Mono',monospace;color:var(--blue);font-size:21px;letter-spacing:-4px}
+  .nav-links{display:flex;gap:30px;list-style:none;font-size:12px;font-weight:600}
+  .nav-links a{text-decoration:none;color:#52627d;position:relative;padding:27px 0}
+  .nav-links a:hover,.nav-links a.active{color:var(--blue)}
+  .nav-links a.active::after{content:'';position:absolute;left:0;right:0;bottom:20px;height:2px;background:var(--blue);border-radius:2px}
+  .nav-hire{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;text-decoration:none;border-radius:11px;padding:10px 17px;font-size:12px;font-weight:700;box-shadow:0 7px 18px rgba(16,33,63,.12)}
+  .nav-hire:hover{transform:translateY(-1px);box-shadow:0 0 0 2px rgba(57,255,136,.16),0 10px 24px rgba(16,33,63,.12)}
+
+  .hero{
+    display:grid;grid-template-columns:1.02fr .98fr;gap:20px;align-items:center;
+    min-height:410px;padding:28px 0 12px
+  }
+  .status-pill{
+    display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #dfe8f4;
+    background:#fff;border-radius:999px;font-size:11px;color:#65758f;margin-bottom:17px;
+  }
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px rgba(57,255,176,.65)}
+  .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(39px,5vw,58px);line-height:1.01;letter-spacing:-.045em;font-weight:700}
+  .hero h1 .name-accent{color:#39FF88}
+  .grad-text{
+    display:inline-block;margin-top:6px;
+    background:linear-gradient(90deg,#20D96B,#39FF88,#7CFFB2);
+    -webkit-background-clip:text;background-clip:text;color:transparent
+  }
+  .hero .lede{max-width:480px;margin-top:17px;color:var(--muted);font-size:13px;line-height:1.65}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:12px;font-weight:700;padding:11px 17px;border-radius:10px;transition:.25s ease}
+  .btn svg{width:15px;height:15px}
+  .btn-primary{background:var(--navy);color:#fff;border:1px solid var(--navy)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 2px rgba(57,255,136,.16),0 10px 22px rgba(16,33,63,.12)}
+  .btn-ghost{background:#fff;color:var(--ink-2);border:1px solid #d9e2ef}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
+  .hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:19px;color:#64748b;font-size:10px}
+  .hero-meta span{display:inline-flex;align-items:center;gap:6px}
+  .hero-meta svg{width:14px;height:14px;color:#667ea4}
+
+  .photo-stage{position:relative;height:390px;display:flex;align-items:flex-end;justify-content:center}
+  .photo-orbit{
+    position:absolute;width:330px;height:330px;border-radius:50%;top:27px;left:50%;transform:translateX(-50%);
+    background:#f0f0ff;border:1px solid #e7e9ff
+  }
+  .photo-orbit::before{
+    content:'';position:absolute;inset:28px;border-radius:50%;
+    background:#f5faff;border:1px dashed rgba(57,255,136,.16)
+  }
+  .photo-glow{
+    position:absolute;width:300px;height:300px;border-radius:50%;top:40px;left:50%;transform:translateX(-50%);
+    background:radial-gradient(circle,rgba(32,217,107,.14),rgba(57,255,176,.08) 52%,transparent 72%);
+    filter:blur(18px)
+  }
+  .photo-cutout{
+    position:relative;z-index:2;max-height:405px;max-width:100%;object-fit:contain;
+    -webkit-mask-image:linear-gradient(to bottom,#000 88%,transparent 100%);
+    mask-image:linear-gradient(to bottom,#000 88%,transparent 100%);
+    filter:drop-shadow(0 22px 30px rgba(32,48,80,.13))
+  }
+  .hero-badge{
+    position:absolute;z-index:4;display:flex;align-items:center;gap:9px;background:#fff;
+    border:1px solid #e3eaf4;border-radius:11px;padding:9px 12px;font-size:10px;font-weight:700;color:#29405f;
+    box-shadow:0 9px 24px rgba(49,66,98,.10)
+  }
+  .hero-badge .badge-icon{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#E9FFF1;color:var(--purple)}
+  .hero-badge.b1{top:85px;right:8px}
+  .hero-badge.b2{top:150px;right:0}
+  .hero-badge.b3{top:215px;right:18px}
+  .hero-note{position:absolute;z-index:4;top:38px;right:102px;color:#1A9B55;font-family:'Space Grotesk',sans-serif;font-size:12px;font-style:italic;transform:rotate(-7deg)}
+
+  .section{padding:35px 0}
+  .section-head{margin-bottom:22px}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:#15964D;text-transform:uppercase}
+  h2{font-family:'Space Grotesk',sans-serif;font-size:27px;line-height:1.1;letter-spacing:-.025em;margin-top:7px}
+  h2 .accent{color:var(--blue)}
+  .section-sub{margin-top:8px;color:var(--muted);font-size:11px;line-height:1.55}
+
+  /* Services: prominent and directly sell the portfolio */
+  .services{
+    display:grid;grid-template-columns:1.02fr 1.98fr;gap:20px;align-items:center;
+    padding:28px 0 34px;border-top:1px solid #edf1f6;border-bottom:1px solid #edf1f6
+  }
+  .services-intro{padding-right:18px}
+  .services-intro h2{font-size:27px}
+  .services-intro p{font-size:11px;line-height:1.65;color:var(--muted);max-width:270px;margin-top:9px}
+  .service-btn{margin-top:16px}
+  .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+  .service-card{
+    min-height:84px;border:1px solid #e4eaf3;border-radius:11px;padding:12px 13px;background:#fff;
+    transition:.25s ease;position:relative;overflow:hidden
+  }
+  .service-card::after{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--service-accent);opacity:.75}
+  .service-card:hover{transform:translateY(-3px);border-color:#BFE8CE;box-shadow:0 12px 24px rgba(55,74,112,.08)}
+  .service-icon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--service-bg);color:var(--service-accent);margin-bottom:7px}
+  .service-icon svg{width:16px;height:16px}
+  .service-card h3{font-family:'Space Grotesk',sans-serif;font-size:11px;margin-bottom:4px}
+  .service-card p{font-size:9px;line-height:1.45;color:#7a879b}
+
+  .portfolio-grid{display:grid;grid-template-columns:.95fr 2.05fr;gap:22px;align-items:start}
+  .stack-panel{border-right:1px solid #e8edf5;padding-right:22px}
+  .stack-groups{display:grid;gap:16px}
+  .stack-kicker{font-family:'JetBrains Mono',monospace;font-size:9px;color:#7a86a1;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+  .chip-row{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid #e5ebf4;border-radius:8px;
+    background:#fff;font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#4b5d78;transition:.2s ease
+  }
+  .chip:hover{border-color:#9FE8B9;box-shadow:0 0 0 2px rgba(57,255,136,.07)}
+  .chip-ic{width:18px;height:18px;display:grid;place-items:center;border-radius:5px;overflow:hidden}
+  .chip-ic svg{width:100%;height:100%}
+  .chip-ic.mono{font-size:7px;font-weight:800;color:#fff}
+
+  .projects-head{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:14px}
+  .view-all{font-size:9px;color:#16A85A;text-decoration:none;font-weight:700;white-space:nowrap}
+  .project-card{
+    border:1px solid #e3e9f3;border-radius:13px;background:#fff;overflow:hidden;
+    display:grid;grid-template-columns:1.05fr .95fr;min-height:205px;box-shadow:0 8px 25px rgba(35,55,90,.045)
+  }
+  .project-copy{padding:20px}
+  .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+  .work-tag{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 7px;border-radius:6px;background:#f8faff;border:1px solid #e5eaf3;color:#64748b}
+  .project-card h3{font-family:'Space Grotesk',sans-serif;font-size:20px;margin-bottom:8px}
+  .project-card p{font-size:10.5px;line-height:1.6;color:var(--muted)}
+  .project-link{display:inline-flex;align-items:center;gap:5px;margin-top:14px;color:var(--blue);font-size:9px;font-weight:700;text-decoration:none}
+  .project-visual{
+    position:relative;min-height:205px;background:#f5f7ff;overflow:hidden;display:flex;align-items:center;justify-content:center
+  }
+  .project-visual::before{
+    content:'';position:absolute;inset:0;
+    background-image:linear-gradient(rgba(57,255,136,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,176,.07) 1px,transparent 1px);
+    background-size:22px 22px
+  }
+  .mock-window{position:relative;z-index:1;width:76%;background:#fff;border:1px solid #dfe6f2;border-radius:9px;box-shadow:0 16px 30px rgba(35,53,88,.14);overflow:hidden}
+  .mock-top{height:22px;border-bottom:1px solid #edf1f6;display:flex;align-items:center;gap:4px;padding:0 7px}
+  .mock-dot{width:5px;height:5px;border-radius:50%;background:#d8deea}
+  .mock-body{display:grid;grid-template-columns:42px 1fr;height:125px}
+  .mock-side{background:#111f3a;padding:9px 6px;display:grid;gap:7px;align-content:start}
+  .mock-side i{height:5px;border-radius:3px;background:rgba(255,255,255,.18)}
+  .mock-side i:first-child{background:#39FF88}
+  .mock-content{padding:10px;background:#fbfcff}
+  .mock-line{height:7px;border-radius:3px;background:#e6eafb;margin-bottom:7px}
+  .mock-line.blue{width:70%;background:#C9F5D8}
+  .mock-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:12px}
+  .mock-card{height:45px;border:1px solid #e7ebf3;border-radius:5px;background:#fff}
+  .mock-card:nth-child(1){border-top:3px solid var(--purple)}
+  .mock-card:nth-child(2){border-top:3px solid var(--cyan)}
+  .mock-card:nth-child(3){border-top:3px solid var(--cyan)}
+
+  .contact-strip{
+    margin:25px 0 8px;padding:15px 20px;border:1px solid #dfe8f3;border-radius:15px;
+    background:linear-gradient(100deg,#f6f7ff,#f5fcfb 55%,#fff7fb);
+    display:flex;align-items:center;justify-content:space-between;gap:18px
+  }
+  .contact-copy{display:flex;align-items:center;gap:12px}
+  .contact-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#E8FFF0;color:var(--purple)}
+  .contact-copy h3{font-family:'Space Grotesk',sans-serif;font-size:13px}
+  .contact-copy p{font-size:9px;color:var(--muted);margin-top:3px}
+  .contact-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .mini-note{font-family:'Space Grotesk',sans-serif;font-size:10px;color:#238A50;font-style:italic;transform:rotate(-4deg)}
+
+  footer{padding:20px 0 25px}
+  .foot-row{display:flex;justify-content:space-between;gap:15px;align-items:center;color:#8190a7;font-size:9px}
+  .foot-row a{text-decoration:none}
+  .socials{display:flex;gap:9px}
+  .socials a{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;color:#566984}
+  .socials a:hover{color:var(--blue);background:#ECFFF4}
+
+  .reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+  @media(max-width:900px){
+    .nav-links{gap:18px}.nav-hire{padding:9px 13px}
+    .hero{grid-template-columns:1fr;min-height:auto;padding-top:35px}
+    .photo-stage{order:-1;height:330px}
+    .photo-orbit{width:260px;height:260px;top:18px}
+    .photo-glow{width:250px;height:250px;top:25px}
+    .photo-cutout{max-height:330px}
+    .hero-badge{right:calc(50% - 190px)}
+    .hero-badge.b1{top:55px}.hero-badge.b2{top:115px}.hero-badge.b3{top:175px}
+    .hero-note{right:calc(50% - 100px);top:20px}
+    .services{grid-template-columns:1fr}
+    .services-intro{padding-right:0}
+    .services-intro p{max-width:520px}
+    .service-grid{grid-template-columns:repeat(2,1fr)}
+    .portfolio-grid{grid-template-columns:1fr}
+    .stack-panel{border-right:0;border-bottom:1px solid #e8edf5;padding:0 0 22px}
+  }
+  @media(max-width:680px){
+    .wrap{width:min(100% - 28px,1100px)}
+    nav{height:64px}
+    .nav-links{display:none}
+    .logo{font-size:15px}
+    .nav-hire{font-size:10px}
+    .hero h1{font-size:40px}
+    .photo-stage{height:300px}
+    .photo-orbit{width:235px;height:235px}
+    .photo-glow{width:225px;height:225px}
+    .photo-cutout{max-height:300px}
+    .hero-badge{font-size:8px;padding:7px 9px;right:5px}
+    .hero-badge .badge-icon{width:22px;height:22px}
+    .hero-badge.b1{top:45px}.hero-badge.b2{top:102px}.hero-badge.b3{top:159px}
+    .hero-note{right:65px;top:14px;font-size:10px}
+    .hero-meta{gap:13px}
+    .service-grid{grid-template-columns:1fr}
+    .project-card{grid-template-columns:1fr}
+    .project-visual{min-height:180px}
+    .contact-strip{flex-direction:column;align-items:flex-start}
+    .contact-actions{width:100%}
+    .contact-actions .btn{flex:1}
+    .foot-row{flex-direction:column;align-items:flex-start}
+  }
+
+</style>
+</head>
+
+<body>
+<div class="progress" id="progress"></div>
+<div class="glow-field" id="glowField">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+</div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#home"><span class="logo-code">&lt;/&gt;</span><span>Ayaansh Shah</span></a>
+      <ul class="nav-links">
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#stack">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a class="nav-hire" href="#contact">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        Hire Me
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+<div class="wrap">
+
+<section class="hero">
+  <div class="reveal">
+    <div class="status-pill"><span class="status-dot"></span>Available for Work <span>·</span> WFH</div>
+    <h1>Hello, I'm<br><span class="name-accent">Ayaansh Shah</span><br><span class="grad-text">Software &amp; AI Engineer</span></h1>
+    <p class="lede">I build modern websites, applications and AI-powered digital solutions — combining clean product design, practical engineering and intelligent automation.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        Contact Me
+      </a>
+      <a class="btn btn-ghost" href="#projects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 5h5v5"/><path d="M19 5 10 14"/><path d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
+        View My Work
+      </a>
+    </div>
+    <div class="hero-meta">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>Patna, India</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5h16v14"/><path d="M8 9h8M8 13h5"/></svg>B.Tech, CSE</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Software &amp; AI</span>
+    </div>
+  </div>
+
+  <div class="photo-stage reveal">
+    <div class="photo-orbit"></div>
+    <div class="photo-glow"></div>
+    <div class="hero-note">Build<br>Innovate<br>Grow ↗</div>
+    <div class="hero-badge b1"><span class="badge-icon">⌘</span>Full Stack Developer</div>
+    <div class="hero-badge b2"><span class="badge-icon">✦</span>AI &amp; ML Enthusiast</div>
+    <div class="hero-badge b3"><span class="badge-icon">◇</span>Ethical Hacking</div>
+    <img class="photo-cutout" src="sh.jpg" alt="Ayaansh Shah">
+  </div>
+</section>
+
+<section id="services" class="services reveal">
+  <div class="services-intro">
+    <div class="kicker">What I Do</div>
+    <h2>Services I <span class="accent">Offer</span></h2>
+    <p>I create practical digital products for businesses, creators and individuals — from idea and interface to deployment and ongoing support.</p>
+    <a class="btn btn-primary service-btn" href="#contact">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      Let's Build Together →
+    </a>
+  </div>
+  <div class="service-grid">
+    <article class="service-card" style="--service-accent:#39FF88;--service-bg:#ECFFF4">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></div>
+      <h3>Web Development</h3><p>Fast, responsive and modern websites with clean frontend and backend integration.</p>
+    </article>
+    <article class="service-card" style="--service-accent:#39FFB0;--service-bg:#E9FFF5">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M10 5h4M11 18.5h2"/></svg></div>
+      <h3>Mobile App Development</h3><p>Android and cross-platform apps with clean UI, smooth flows and scalable architecture.</p>
+    </article>
+    <article class="service-card" style="--service-accent:#20D96B;--service-bg:#E9FFF0">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M4.5 7.5 19.5 16.5M4.5 16.5 19.5 7.5"/><circle cx="12" cy="12" r="7"/></svg></div>
+      <h3>AI &amp; LLM Solutions</h3><p>AI assistants, RAG workflows, model integrations and AI-powered automation.</p>
+    </article>
+    <article class="service-card" style="--service-accent:#7CFFB2;--service-bg:#F0FFF5">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 20 5.5-1 10-10-4.5-4.5-10 10L4 20Z"/><path d="m13.5 5.5 4.5 4.5M7 16l3 3"/></svg></div>
+      <h3>UI/UX Design &amp; Prototyping</h3><p>Clean, modern interfaces and clickable product concepts focused on usability.</p>
+    </article>
+    <article class="service-card" style="--service-accent:#39FFB0;--service-bg:#E9FFF5">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v5M12 16v5M3 12h5M16 12h5M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5"/></svg></div>
+      <h3>Maintenance &amp; Support</h3><p>Updates, fixes, performance improvements and ongoing product support.</p>
+    </article>
+  </div>
+</section>
+
+<section id="about" class="section reveal">
+  <div class="section-head">
+    <div class="kicker">About</div>
+    <h2>More than code — <span class="accent">I build solutions.</span></h2>
+    <p class="section-sub">I enjoy turning ideas into usable digital products, connecting frontend, backend, databases and AI into one clear experience.</p>
+  </div>
+  <div class="code-card" style="background:linear-gradient(180deg,#171923,#11131a);border:1px solid #292d38;border-radius:14px;padding:20px;box-shadow:0 18px 40px rgba(17,24,39,.12)">
+<pre style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8;color:#e8eaf0;overflow:auto"><span style="color:#ff6eae">const</span> <span style="color:#8BE28B">developer</span> = {
+  <span style="color:#67e8d5">name</span>: <span style="color:#b7f7e9">"Ayaansh Shah"</span>,
+  <span style="color:#67e8d5">focus</span>: [<span style="color:#b7f7e9">"Web"</span>, <span style="color:#b7f7e9">"Mobile"</span>, <span style="color:#b7f7e9">"AI"</span>, <span style="color:#b7f7e9">"Automation"</span>],
+  <span style="color:#67e8d5">approach</span>: <span style="color:#b7f7e9">"Design → Build → Test → Improve"</span>
+};</pre>
+  </div>
+</section>
+
+<section id="stack" class="section reveal">
+  <div class="portfolio-grid">
+    <div class="stack-panel">
+      <div class="section-head">
+        <div class="kicker">Tools &amp; Technologies</div>
+        <h2>My Tech <span class="accent">Stack</span></h2>
+        <p class="section-sub">Modern tools for scalable and efficient solutions.</p>
+      </div>
+      <div class="stack-groups">
+        <div>
+          <div class="stack-kicker">Languages &amp; Runtimes</div>
+          <div class="chip-row">
+            <div class="chip"><span class="chip-ic"><svg viewBox="0 0 24 24"><path d="M12 2c-4 0-4 2-4 2v2h4v1H6s-3 0-3 5 3 5 3 5h2v-3s0-2 2-2h4s3 0 3-3V5s0-3-4-3z" fill="#3776AB"/><path d="M12 22c4 0 4-2 4-2v-2h-4v-1h6s3 0 3-5-3-5-3-5h-2v3s0 2-2 2h-4s-3 0-3 3v3s0 3 4 3z" fill="#FFD43B"/></svg></span>Python</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#3178C6">TS</span>TypeScript</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#f0db4f;color:#111">JS</span>JavaScript</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#54C5F8">D</span>Dart / Flutter</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#00ADD8">Go</span>Go</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#336791">SQL</span>SQL</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#30323d">SH</span>Bash</div>
+          </div>
+        </div>
+        <div>
+          <div class="stack-kicker">AI &amp; Machine Learning</div>
+          <div class="chip-row">
+            <div class="chip"><span class="chip-ic mono" style="background:#ee4c2c">PT</span>PyTorch</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#8b63ff">HF</span>HuggingFace</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#5c3ee8">CV</span>OpenCV</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#3e8e5e">LC</span>LangChain</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#30313b">AI</span>Ollama / vLLM</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#5368ff">QD</span>Qdrant</div>
+          </div>
+        </div>
+        <div>
+          <div class="stack-kicker">Platforms &amp; Tooling</div>
+          <div class="chip-row">
+            <div class="chip"><span class="chip-ic mono" style="background:#f1502f">Git</span>Git</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#20232a">GH</span>GitHub</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#2496ed">DK</span>Docker</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#8b63ff">FB</span>Firebase</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#fd366e">AW</span>Appwrite</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#007acc">VS</span>VS Code</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#3ddc84;color:#10213f">AS</span>Android Studio</div>
+            <div class="chip"><span class="chip-ic mono" style="background:#a259ff">FG</span>Figma</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="projects">
+      <div class="projects-head">
+        <div>
+          <div class="kicker">Some of My Work</div>
+          <h2>Featured <span class="accent">Project</span></h2>
+          <p class="section-sub">A glimpse of a product currently being built.</p>
+        </div>
+        <a class="view-all" href="#contact">View All Projects →</a>
+      </div>
+      <article class="project-card">
+        <div class="project-copy">
+          <div class="tag-row"><span class="work-tag">Flutter</span><span class="work-tag">Appwrite</span><span class="work-tag">Multi-app system</span></div>
+          <h3>Student Portal Platform</h3>
+          <p>A Flutter-based portal system for colleges, with dedicated experiences for students and administrators, backed by Appwrite Cloud.</p>
+          <a class="project-link" href="#contact">View Project →</a>
+        </div>
+        <div class="project-visual">
+          <div class="mock-window">
+            <div class="mock-top"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
+            <div class="mock-body">
+              <div class="mock-side"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="mock-content"><div class="mock-line blue"></div><div class="mock-line"></div><div class="mock-cards"><span class="mock-card"></span><span class="mock-card"></span><span class="mock-card"></span></div></div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-strip reveal">
+  <div class="contact-copy">
+    <div class="contact-icon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+    <div><h3>Let's Work Together</h3><p>Have a project in mind? I'd love to hear about it.</p></div>
+  </div>
+  <div class="contact-actions">
+    <a class="btn btn-primary" href="https://www.instagram.com/ayaansh_shah_" target="_blank" rel="noopener">Follow on Instagram</a>
+    <a class="btn btn-ghost" href="mailto:hello@ayaanshshah.in">Contact Me</a>
+  </div>
+  <div class="mini-note">Open to<br>new opportunities ↗</div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© 2026, Ayaansh Shah · Built with passion · Patna, India</span>
+    <span class="socials">
+      <a href="https://github.com/ayaansh-shah" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
+      <a href="https://www.instagram.com/ayaansh_shah_" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  const els=document.querySelectorAll('.reveal');
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})
+  },{threshold:.08});
+  els.forEach(el=>io.observe(el));
+  const bar=document.getElementById('progress');
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement;
+    const max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+  });
+</script>
+</body>
+</html>
+
