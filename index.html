@@ -217,6 +217,19 @@
     .portrait { position: relative; z-index: 2; height: min(66vh, 580px); width: auto; max-width: 100%; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 26px 34px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(0,230,60,.28)); transform: translateZ(60px); -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%), linear-gradient(to bottom, #000 0, #000 66%, transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%), linear-gradient(to bottom, #000 0, #000 66%, transparent 100%); mask-composite: intersect; }
     .initials { display: none; position: relative; z-index: 2; width: 260px; height: 260px; margin-bottom: 40px; place-items: center; font-size: 84px; font-weight: 800; color: var(--coral); border-radius: 14px; transform: translateZ(60px); text-shadow: 0 0 30px rgba(0,255,65,.8); }
 
+    .hud { position: absolute; top: 0; bottom: 0; left: 50%; width: min(420px, 100%); translate: -50% 0; transform-style: preserve-3d; pointer-events: none; }
+    .links { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transform: translateZ(30px); }
+    .links line { stroke: var(--coral); stroke-width: 1.4; stroke-dasharray: 4 5; vector-effect: non-scaling-stroke; opacity: .75; animation: dash 1.1s linear infinite; }
+    .dp { position: absolute; z-index: 6; width: 172px; border-radius: 10px; font-size: 10px; line-height: 1.55; transform: translateZ(100px); animation: bob 6s ease-in-out infinite; }
+    .dp .bar { padding: 7px 10px; font-size: 10px; gap: 5px; }
+    .dp .bar i { width: 7px; height: 7px; }
+    .dp .bar span { margin-left: 5px; }
+    .dp-body { height: 92px; padding: 8px 10px; overflow: hidden; white-space: pre; color: var(--soft); }
+    .dp-body .hi { color: var(--coral); text-shadow: 0 0 10px rgba(0,255,65,.6); }
+    .dp1 { left: -8px; top: 14%; }
+    .dp2 { right: -34px; top: 14%; animation-delay: -2s; }
+    .dp3 { left: -10px; bottom: 14%; animation-delay: -4s; }
+
     .reticle {
       position: absolute;
       inset: 6% 3% 0;
@@ -398,6 +411,7 @@
     @keyframes gone { to { visibility: hidden; opacity: 0; } }
     @keyframes dot { 0%, 60%, 100% { translate: 0 0; opacity: .5; } 30% { translate: 0 -5px; opacity: 1; } }
     @keyframes shimmer { to { translate: 100% 0; } }
+    @keyframes dash { to { stroke-dashoffset: -18; } }
     @keyframes scan { from { transform: translateY(-80px); } to { transform: translateY(640px); } }
     @keyframes gl1 { 0% { opacity: .9; clip-path: inset(8% 0 62% 0); transform: translate(-7px, 0); } 25% { clip-path: inset(46% 0 22% 0); transform: translate(6px, 0); } 50% { clip-path: inset(68% 0 6% 0); transform: translate(-5px, 0); } 75% { clip-path: inset(18% 0 54% 0); transform: translate(7px, 0); } 100% { opacity: 0; clip-path: inset(0); transform: none; } }
     @keyframes gl2 { 0% { opacity: .9; clip-path: inset(58% 0 12% 0); transform: translate(6px, 0); } 33% { clip-path: inset(10% 0 66% 0); transform: translate(-6px, 0); } 66% { clip-path: inset(36% 0 36% 0); transform: translate(5px, 0); } 100% { opacity: 0; clip-path: inset(0); transform: none; } }
@@ -410,8 +424,8 @@
       .scroll-hint { display: none; }
       .hero { padding-top: 110px; }
       .hero-name { top: 12vh; font-size: min(17vw, 140px); line-height: .92; white-space: normal; }
-      .stage { margin-top: 14vh; }
       .note { right: auto; left: 10%; top: 22%; }
+      .stage { margin-top: 14vh; }
       .t-story { grid-column: 1 / 13; grid-row: auto; }
       .t-loc, .t-edu, .t-role, .t-skill, .t-avail { grid-column: span 6; }
       .proj { grid-template-columns: 1fr; min-height: 0; }
@@ -449,6 +463,7 @@
       .badge-go { inset: 38px; }
       .proj-info { padding: 18px 18px 24px; }
       .note { font-size: 11px; }
+      .dp, .links { display: none; }
       .footer-row { flex-direction: column; align-items: flex-start; }
     }
 
@@ -529,6 +544,16 @@
           <div class="initials glass">AS</div>
           <div class="reticle"><span class="rid">ID::AYAANSH_SHAH</span><span class="rst"><i></i>ONLINE</span></div>
           <div class="note">Build<br>Innovate<br>Grow ↘</div>
+          <div class="hud">
+            <svg class="links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="38" y1="24" x2="50" y2="44"/>
+              <line x1="66" y1="42" x2="50" y2="46"/>
+              <line x1="38" y1="76" x2="50" y2="58"/>
+            </svg>
+            <div class="dp dp1 glass"><div class="bar"><i></i><i></i><i></i><span>scan.log</span></div><div class="dp-body" id="logA"></div></div>
+            <div class="dp dp2 glass"><div class="bar"><i></i><i></i><i></i><span>net.sh</span></div><div class="dp-body" id="logB"></div></div>
+            <div class="dp dp3 glass"><div class="bar"><i></i><i></i><i></i><span>decrypt.bin</span></div><div class="dp-body" id="logC"></div></div>
+          </div>
         </div>
 
         <div class="hero-left reveal">
@@ -1073,6 +1098,42 @@
         })();
       }
 
+      function rr(n) { return Math.floor(Math.random() * n); }
+      function hx(n) {
+        var h = rr(Math.pow(16, n)).toString(16).toUpperCase();
+        while (h.length < n) h = '0' + h;
+        return h;
+      }
+      function feed(id, gen, ms, keep) {
+        var box = doc.getElementById(id);
+        if (!box) return;
+        function push() {
+          var v = gen();
+          var d = doc.createElement('div');
+          d.textContent = v.t;
+          if (v.hi) d.className = 'hi';
+          box.appendChild(d);
+          while (box.children.length > keep) box.removeChild(box.firstChild);
+        }
+        for (var i = 0; i < keep; i++) push();
+        if (!reduce) setInterval(function () { if (!doc.hidden) push(); }, ms);
+      }
+      var scanLines = ['> scanning ports ...', '22/tcp   open  ssh', '80/tcp   open  http', '443/tcp  open  tls', '3306/tcp filtered', '8080/tcp open  proxy', '> scan complete', '> target locked'];
+      var si = 0;
+      feed('logA', function () {
+        var l = scanLines[si % scanLines.length];
+        si++;
+        return { t: l, hi: l.charAt(0) === '>' };
+      }, 900, 5);
+      feed('logB', function () {
+        var k = rr(4);
+        if (k === 0) return { t: 'ping 10.0.' + rr(255) + '.' + rr(255), hi: false };
+        if (k === 1) return { t: 'reply ' + (8 + rr(40)) + 'ms ttl=' + (54 + rr(10)), hi: false };
+        if (k === 2) return { t: 'ssl handshake OK', hi: true };
+        return { t: 'hop ' + (1 + rr(9)) + ' -> ' + hx(2) + ':' + hx(2), hi: false };
+      }, 700, 5);
+      feed('logC', function () { return { t: '0x' + hx(4) + ' ' + hx(4) + ' ' + hx(4), hi: rr(6) === 0 }; }, 450, 5);
+
       var rain = doc.getElementById('rain');
       if (reduce) {
         rain.style.display = 'none';
@@ -1132,67 +1193,6 @@
       warm.position.set(-6, -2, 6);
       scene.add(warm);
 
-      var vs = [
-        'uniform float uTime;',
-        'varying vec3 vN;',
-        'varying vec3 vV;',
-        'float f(vec3 p){',
-        '  float t = uTime;',
-        '  return sin(p.x*1.7+t*.8)*sin(p.y*1.9+t*.6)*sin(p.z*1.6+t*.7)*.55 + sin(p.x*3.2-t*.9+p.y*2.4)*sin(p.z*2.7+t*.5)*.18;',
-        '}',
-        'vec3 dp(vec3 d){ return d*(2.4 + f(d*2.4)*.75); }',
-        'void main(){',
-        '  vec3 n = normalize(position);',
-        '  vec3 ref = abs(n.y) > .99 ? vec3(1.,0.,0.) : vec3(0.,1.,0.);',
-        '  vec3 t = normalize(cross(n, ref));',
-        '  vec3 b = cross(n, t);',
-        '  float e = .02;',
-        '  vec3 p0 = dp(n);',
-        '  vec3 p1 = dp(normalize(n + t*e));',
-        '  vec3 p2 = dp(normalize(n + b*e));',
-        '  vec3 nn = normalize(cross(p1 - p0, p2 - p0));',
-        '  if (dot(nn, n) < 0.) nn = -nn;',
-        '  vN = normalize(normalMatrix * nn);',
-        '  vec4 mv = modelViewMatrix * vec4(p0, 1.);',
-        '  vV = normalize(-mv.xyz);',
-        '  gl_Position = projectionMatrix * mv;',
-        '}'
-      ].join('\n');
-
-      var fsrc = [
-        'precision highp float;',
-        'varying vec3 vN;',
-        'varying vec3 vV;',
-        'void main(){',
-        '  vec3 N = normalize(vN);',
-        '  vec3 V = normalize(vV);',
-        '  float fr = pow(1. - max(dot(N,V),0.), 1.6);',
-        '  vec3 coral = vec3(0.,1.,.25);',
-        '  vec3 hot = vec3(.82,1.,.88);',
-        '  vec3 col = mix(coral, hot, fr*.8);',
-        '  gl_FragColor = vec4(col, .3 + .7*fr);',
-        '}'
-      ].join('\n');
-
-      var blobMat = new THREE.ShaderMaterial({ uniforms: { uTime: { value: 0 } }, vertexShader: vs, fragmentShader: fsrc, wireframe: true, transparent: true, depthWrite: false });
-      var blobGroup = new THREE.Group();
-      blobGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1, 9), blobMat));
-
-      var ring1 = new THREE.Mesh(new THREE.TorusGeometry(3.3, 0.035, 16, 180), new THREE.MeshBasicMaterial({ color: 0x00ff41, transparent: true, opacity: 0.6 }));
-      ring1.rotation.set(1.2, 0.2, 0.3);
-      blobGroup.add(ring1);
-
-      var ring2 = new THREE.Mesh(new THREE.TorusGeometry(3.9, 0.022, 16, 180), new THREE.MeshBasicMaterial({ color: 0xe8fff0, transparent: true, opacity: 0.32 }));
-      ring2.rotation.set(0.5, 0.4, -0.6);
-      blobGroup.add(ring2);
-
-      var orbiters = [];
-      [[0.2, 0x00ff41, 3.6, 0], [0.14, 0xe8fff0, 3.1, 2.1], [0.26, 0x6dffa0, 4.1, 4.2]].forEach(function (c, i) {
-        var m = new THREE.Mesh(new THREE.OctahedronGeometry(c[0] * 1.2), new THREE.MeshBasicMaterial({ color: c[1] }));
-        blobGroup.add(m);
-        orbiters.push({ mesh: m, r: c[2], a: c[3], s: 0.35 + i * 0.12, tilt: 0.3 + i * 0.35 });
-      });
-      scene.add(blobGroup);
 
       var seed = 11;
       function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
@@ -1242,16 +1242,10 @@
       });
 
       var upp = 1;
-      var stageEl = doc.querySelector('.stage');
       function layout() {
         var w = window.innerWidth, h = window.innerHeight;
         var docH = root.scrollHeight;
         upp = (2 * 10 * Math.tan(25 * Math.PI / 180)) / h;
-        var r = stageEl.getBoundingClientRect();
-        var cx = r.left + r.width / 2;
-        var cy = r.top + window.scrollY + r.height / 2;
-        blobGroup.position.set((cx - w / 2) * upp, -(cy - h / 2) * upp, 0);
-        blobGroup.scale.setScalar(Math.max(0.3, 0.95 * Math.min(r.width, r.height) * upp / 5.8));
         var cw = Math.min(w * 0.92, 1180);
         var margin = Math.max((w - cw) / 2, 36);
         var fit = Math.min(1, Math.max(0.55, margin / 130));
@@ -1291,23 +1285,8 @@
         requestAnimationFrame(frame);
         if (doc.hidden) return;
         var t = clock.getElapsedTime();
-        blobMat.uniforms.uTime.value = reduce ? 1 : t;
         camera.position.y = -window.scrollY * upp;
         camera.position.x += (mx * 0.6 - camera.position.x) * 0.05;
-        blobGroup.rotation.y += (mx * 0.35 - blobGroup.rotation.y) * 0.05;
-        blobGroup.rotation.x += (my * 0.22 - blobGroup.rotation.x) * 0.05;
-        if (!reduce) {
-          ring1.rotation.z += 0.004;
-          ring2.rotation.z -= 0.003;
-          ring2.rotation.y += 0.002;
-          for (var a = 0; a < orbiters.length; a++) {
-            var ob = orbiters[a];
-            var ang = ob.a + t * ob.s;
-            ob.mesh.position.set(Math.cos(ang) * ob.r, Math.sin(ang) * ob.r * Math.sin(ob.tilt), Math.sin(ang) * ob.r * Math.cos(ob.tilt));
-            ob.mesh.rotation.x += 0.03;
-            ob.mesh.rotation.y += 0.04;
-          }
-        }
         for (var k = 0; k < tiles.length; k++) {
           var o = tiles[k];
           if (!reduce) {
