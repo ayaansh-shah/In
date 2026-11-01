@@ -253,7 +253,6 @@
     .rst { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--coral); }
     .rst i { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); animation: pulse 1.8s infinite; }
 
-    .note { position: absolute; z-index: 5; right: -14px; top: 38%; font-size: 14px; font-weight: 700; line-height: 1.45; color: var(--peach); text-align: left; padding-left: 10px; border-left: 2px solid var(--coral); text-shadow: 0 0 14px rgba(0,255,65,.6); transform: translateZ(90px); }
 
     .hero-left { padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .hero-left .buttons { justify-content: center; }
@@ -424,7 +423,6 @@
       .scroll-hint { display: none; }
       .hero { padding-top: 110px; }
       .hero-name { top: 12vh; font-size: min(17vw, 140px); line-height: .92; white-space: normal; }
-      .note { right: auto; left: 10%; top: 22%; }
       .stage { margin-top: 14vh; }
       .t-story { grid-column: 1 / 13; grid-row: auto; }
       .t-loc, .t-edu, .t-role, .t-skill, .t-avail { grid-column: span 6; }
@@ -462,8 +460,15 @@
       .badge-wrap { width: 150px; height: 150px; align-self: center; }
       .badge-go { inset: 38px; }
       .proj-info { padding: 18px 18px 24px; }
-      .note { font-size: 11px; }
-      .dp, .links { display: none; }
+      .hud { width: 100%; }
+      .dp { width: 124px; font-size: 8.5px; line-height: 1.5; }
+      .dp .bar { padding: 5px 7px; font-size: 8.5px; gap: 4px; }
+      .dp .bar i { width: 5px; height: 5px; }
+      .dp-body { height: 78px; padding: 6px 7px; }
+      .reticle .rid { display: none; }
+      .dp1 { left: 4px; top: 4%; }
+      .dp2 { right: 4px; top: 30%; }
+      .dp3 { left: 4px; bottom: 14%; }
       .footer-row { flex-direction: column; align-items: flex-start; }
     }
 
@@ -543,7 +548,6 @@
           <img class="portrait" src="ayaansh.png" alt="Ayaansh Shah" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
           <div class="initials glass">AS</div>
           <div class="reticle"><span class="rid">ID::AYAANSH_SHAH</span><span class="rst"><i></i>ONLINE</span></div>
-          <div class="note">Build<br>Innovate<br>Grow ↘</div>
           <div class="hud">
             <svg class="links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <line x1="38" y1="24" x2="50" y2="44"/>
